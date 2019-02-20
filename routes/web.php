@@ -55,6 +55,6 @@ Auth::routes();
 Route::get('/home', 'HomeController@index')->name('home');
 
 
-Route::get('products', 'ProductsController@index');
+Route::get('/api/products/fetch', 'ProductsAdminController@store')->middleware('admin');
 
 

@@ -20,6 +20,8 @@
                   <div class="tile is-child box notification is-info">
                       
                         <p class="is-size-3">{{$product->title}}</p>
+                        <p class="is-size-1">Category: {{$product->category}}</p>
+                        <p class="is-size-1">Rate: {{$product->category}}</p>
                       <div class="content is-size-5">
                         <img src="{{$product->image}}"></img>
                       </div>

@@ -23,6 +23,7 @@ npm-debug.log
 yarn-error.log
 
 .phpunit.result.cache
+/database/seeds/UsersTableSeeder.php
 
 # Rocketeer PHP task runner and deployment package. https://github.com/rocketeers/rocketeer
 .rocketeer/
