@@ -69,7 +69,7 @@ class InstantFansController extends Controller
            
             
             $chunks = $final_collection->chunk(100);
-            dd($chunks);
+            
             foreach ($chunks as $chunk)
             {
                foreach($chunk as $row)

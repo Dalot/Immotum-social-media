@@ -79,7 +79,7 @@ class InstantFansServicesDeleted extends Command
             }
             
             
-            \Mail::to('ge.dalot@gmail.com')->send(new InstantFansServiceDeletedMail($OurTotalServices, $TheirTotalServices, $oldProducts));
+            \Mail::to('example@gmail.com')->send(new InstantFansServiceDeletedMail($OurTotalServices, $TheirTotalServices, $oldProducts));
         }
     }
 }

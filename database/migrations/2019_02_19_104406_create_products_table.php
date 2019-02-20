@@ -16,6 +16,7 @@ class CreateProductsTable extends Migration
         Schema::create('products', function (Blueprint $table) {
             $table->increments('id');
             $table->string('title');
+            $table->string('description');
             $table->string('category_name');
             $table->unsignedInteger('category_id')->nullable();
             $table->double('original_price');
@@ -24,6 +25,7 @@ class CreateProductsTable extends Migration
             $table->unsignedMediumInteger( 'min' );
             $table->unsignedInteger('max');
             $table->boolean('available')->default( true );
+            $table->softDeletes();
             $table->timestamps();
             
             

@@ -42,11 +42,14 @@ Route::get("/notification", function(){
 
 
 Route::resource('projects', 'ProjectsController');
+Route::resource('user', 'UserController');
 
-Auth::routes();
+Auth::routes(['verify' => true]);
 
-Route::get('/home', 'HomeController@index')->name('home');
-
+Route::get('/home', 'HomeController@index')->middleware('verified');
+Route::get('/stripe', 'StripeController@index')->middleware('verified');
+Route::post('/stripe', 'StripeController@charge');
+Route::post('/charge-success', 'StripeController@success')->middleware('verified');
 
 Route::get('/api/products/fetch', 'InstantFansController@store')->middleware('auth')->middleware('admin');
 
