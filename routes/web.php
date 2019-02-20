@@ -43,18 +43,11 @@ Route::get("/notification", function(){
 
 Route::resource('projects', 'ProjectsController');
 
-Route::post('/projects/{project}/tasks', 'ProjectTasksController@store');
-
-Route::post('/completed-tasks/{task}', 'CompletedTasksController@store');
-Route::delete('/completed-tasks/{task}', 'CompletedTasksController@destroy');
-
-
-
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
 
 
-Route::get('/api/products/fetch', 'ProductsAdminController@store')->middleware('admin');
+Route::get('/api/products/fetch', 'InstantFansController@store')->middleware('auth')->middleware('admin');
 
 
