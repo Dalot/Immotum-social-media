@@ -12,7 +12,7 @@ class InstantFansController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('admin');
+        
     }
     
     /**
@@ -21,7 +21,8 @@ class InstantFansController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index()
-    {
+    {   
+        
         return response()->json(Product::all(),200);
     }
 
@@ -33,7 +34,7 @@ class InstantFansController extends Controller
      */
     public function fetch()
     {
-        dd("stop");
+       
         
          $client = new Client();
             $res = $client->request('POST', 'https://instant-fans.com/api/v2',
@@ -73,6 +74,8 @@ class InstantFansController extends Controller
                     
                     $prod = $validator->getData();
                     $desc = (isset( $scrapeData[$key]["description"]) ? $scrapeData[$key]["description"] : $prod["type"] );
+                   
+                    
                     $prod["description"] = $desc;
                     
                     $prod = InstantFansResource::make($prod)->resolve();

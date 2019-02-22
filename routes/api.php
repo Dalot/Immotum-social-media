@@ -18,7 +18,7 @@ use Illuminate\Http\Request;
 // ====================== PRODUCTS ====================== //
 Route::get('/products', 'InstantFansController@index');
 Route::get('/products/{product}', 'InstantFansController@show');
-
+Route::get('/fetch', 'InstantFansController@fetch');
 // ====================================================== //
 
 
@@ -28,7 +28,7 @@ Route::get('/products/{product}', 'InstantFansController@show');
 // ====================== AUTHENTICATION ====================== //
 Route::post('login', 'UserController@login');
 Route::post('register', 'UserController@register');
-Route::get('/fetch', 'InstantFansController@fetch');
+
 // ============================================================ //
 
 
