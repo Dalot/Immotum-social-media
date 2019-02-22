@@ -15,7 +15,7 @@
                                 </h5>
                                 <hr>
                                 <span class="small-text text-muted">Quantity: {{order.quantity}}
-                                    <span class="float-right">{{order.is_delivered == 1? "shipped!" : "not shipped"}}</span>
+                                    <span class="float-right">{{order.status}}</span>
                                 </span>
                                 <br><br>
                                 <p><strong>Delivery address:</strong> <br>{{order.address}}</p>
@@ -50,7 +50,7 @@
 
             axios.get(`api/users/${this.user.id}/orders`)
                  .then(response => {
-                     console.log(response.data);
+                     
                      this.orders = response.data;
                  })
         }

@@ -17,6 +17,7 @@ class OrdersTableSeeder extends Seeder
         
         foreach ( $products as $product ) {
           # First fetch category Id
+
           $product_title        = $product->title;
           $product_id     = $product->id;
           $product_user_id    = rand(1, 2);
@@ -25,8 +26,8 @@ class OrdersTableSeeder extends Seeder
           DB::table( 'orders' )->insert( [
             'product_id'          => $product_id,
             'user_id'          => $product_user_id,
+            'order_api_id' => rand(0,4353),
             'quantity'    => rand(0, 100),
-            'is_delivered' => rand(0, 1),
             'created_at'     => Carbon::now(),
           ] );
     

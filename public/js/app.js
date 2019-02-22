@@ -1239,7 +1239,6 @@ __webpack_require__.r(__webpack_exports__);
     axios.defaults.headers.common['Content-Type'] = 'application/json';
     axios.defaults.headers.common['Authorization'] = 'Bearer ' + localStorage.getItem('ImmotumInstantFans.jwt');
     axios.get("api/users/".concat(this.user.id, "/orders")).then(function (response) {
-      console.log(response.data);
       _this.orders = response.data;
     });
   }
@@ -4358,11 +4357,7 @@ var render = function() {
                         "\n                            "
                     ),
                     _c("span", { staticClass: "float-right" }, [
-                      _vm._v(
-                        _vm._s(
-                          order.is_delivered == 1 ? "shipped!" : "not shipped"
-                        )
-                      )
+                      _vm._v(_vm._s(order.status))
                     ])
                   ]),
                   _vm._v(" "),

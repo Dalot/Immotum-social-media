@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use GuzzleHttp\Client;
 use App\User;
+use App\Order;
 use Auth;
 
 class UserController extends Controller
@@ -126,23 +128,41 @@ class UserController extends Controller
      */
     public function showOrders(User $user)
     {
-        $orders = $user->orders()->with(['product'])->where('user_id', $user->id )->get() ;
+        $orders = $user->orders()->with(['product'])->where('user_id', $user->id )->get();
+        $order_api_ids = Order::select('order_api_id')->where('user_id', $user->id)->get()->toArray();
+        $arr = [];
         
-       
+        foreach($order_api_ids as $id)
+        {
+            $arr[] = $id["order_api_id"];
+        }
         
-        return response()->json($orders);
-        dd($order_ids);
+        
         $client = new Client();
-            $res = $client->request('POST', 'https://instant-fans.com/api/v2',
+        $res = $client->request('POST', 'https://instant-fans.com/api/v2',
+        [
+            'query' =>
             [
-                'query' =>
-                [
-                    'key' => env('INSTANT_FANS_API_KEY'),
-                    'action' => 'status',
-                    'orders' => implode(",", (array)$order_ids)
-                ]
-            ]);
-        return response()->json($user->orders()->with(['product'])->where('user_id', 2)->get());
+                'key' => env('INSTANT_FANS_API_KEY'),
+                'action' => 'status',
+                'orders' => implode(",", $arr)
+            ]
+        ]);
+            
+        $res = json_decode( $res->getBody(), true );
+        
+        if(!isset($res))
+        {
+            foreach($orders as $order)
+            {
+                $api_id = $order->order_api_id;
+               
+                Order::where('id', $order->id)->update( ['status', $res[$api_id]->status] );
+            }
+        }
+            
+        return response()->json($orders);
+        
     }
     /**
      * Show the form for editing the specified resource.

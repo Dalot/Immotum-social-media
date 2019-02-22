@@ -17,9 +17,10 @@ class CreateOrdersTable extends Migration
             $table->increments('id');
             $table->unsignedInteger('product_id');
             $table->unsignedInteger('user_id');
+            $table->unsignedInteger('order_api_id');
             $table->unsignedInteger('quantity')->default(1);
             $table->string('address')->nullable();
-            $table->boolean('is_delivered')->default(false);
+            $table->string('status')->default("In Progress");
             $table->timestamps();
             $table->softDeletes();
         });
