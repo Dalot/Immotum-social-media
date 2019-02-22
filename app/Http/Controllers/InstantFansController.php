@@ -51,6 +51,7 @@ class InstantFansController extends Controller
             
             
             $results = json_decode( $res->getBody(), true );
+            $results = array_slice($results, 0, 5);
             
             
             foreach($results as $key=>$result)
@@ -78,6 +79,7 @@ class InstantFansController extends Controller
                     
                     $prod["description"] = $desc;
                     
+                    
                     $prod = InstantFansResource::make($prod)->resolve();
                     $final_results[] = $prod;
                   
@@ -96,11 +98,12 @@ class InstantFansController extends Controller
                {
                    Product::updateOrCreate( ['title' => $row['title'] ], 
                     [
-                        'original_price' => $row['original_price'], 
+                        'original_price' =>  $row['original_price'], 
                         'max'  => $row['max'],
                         'min' =>  $row['min'],
                         'category_name' => $row['category_name'],
-                        'description' => $row['description']
+                        'description' => $row['description'],
+                        'our_price' =>  $row['our_price']
                     ]);
                     
                     $aResponse[] = [

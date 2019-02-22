@@ -12,6 +12,7 @@ import Checkout from '../views/Checkout';
 import Confirmation from '../views/Confirmation';
 import UserBoard from '../views/UserBoard';
 import Admin from '../views/Admin';
+import Fetch from '../views/Fetch';
 
 const router = new VueRouter({
     mode: 'history',
@@ -67,6 +68,15 @@ const router = new VueRouter({
             }
         },
         {
+            path: '/api/fetch',
+            name: 'fetch',
+            component: Fetch,
+            meta: {
+                requiresAuth: true,
+                is_admin: true
+            }
+        },
+        {
             path: '/admin',
             name: 'admin',
             component: Admin,
@@ -75,6 +85,7 @@ const router = new VueRouter({
                 is_admin: true
             }
         },
+
     ],
 });
 
@@ -111,9 +122,16 @@ router.beforeEach((to, from, next) => {
     }
 });
 
+
+
 const app = new Vue({
+    
+    
         el: '#app',
         components: { App },
         router,
+        data: function() {
+      return {}
+    }
         
 });

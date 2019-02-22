@@ -3,8 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Order;
-use App\Order;
+
 use Illuminate\Http\Request;
+use GuzzleHttp\Client;
 
 class OrderController extends Controller
 {
@@ -15,6 +16,8 @@ class OrderController extends Controller
      */
     public function index()
     {
+        
+        
         return response()->json(Order::with(['product'])->get(),200);
     }
 

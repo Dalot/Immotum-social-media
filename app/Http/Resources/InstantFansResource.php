@@ -16,11 +16,13 @@ class InstantFansResource extends JsonResource
      */
     public function toArray($request)
     {
+        $our_price =  $this->resource['rate'] * 1.3;
         
         return [
             'title' => $this->resource['name'],
             'category_name' => $this->resource['category'],
-            'original_price' => $this->resource['rate'],
+            'original_price' => floatval($this->resource['rate']),
+            'our_price' => floatval($our_price),
             'min' => $this->resource['min'],
             'max' => $this->resource['max'],
             'service_id' => $this->resource['service'],

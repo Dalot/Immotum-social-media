@@ -20,8 +20,7 @@ class CreateProductsTable extends Migration
             $table->string('category_name');
             $table->unsignedInteger('category_id')->nullable();
             $table->double('original_price');
-            $table->double('our_price_factor')->default( 30 );
-            $table->double('our_price')->nullable();
+            $table->double('our_price');
             $table->unsignedMediumInteger( 'min' );
             $table->unsignedInteger('max');
             $table->boolean('available')->default( true );

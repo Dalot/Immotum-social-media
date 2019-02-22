@@ -11,7 +11,7 @@
                             <li><button class="btn" @click="setComponent('orders')">Orders</button></li>
                             <li><button class="btn" @click="setComponent('products')">Products</button></li>
                             <li><button class="btn" @click="setComponent('users')">Users</button></li>
-                            <li><a href="/api/fetch">Fetch</a></li>
+                            <li><button class="btn" @click="setComponent('fetch')">Fetch</button></li>
                             
                             
                            
@@ -30,6 +30,7 @@
     import Users from '../js/components/Admin/Users'
     import Products from '../js/components/Admin/Products'
     import Orders from '../js/components/Admin/Orders'
+    import Fetch from '../views/Fetch'
 
     export default {
         data() {
@@ -62,12 +63,17 @@
                         this.activeComponent = Products
                         this.$router.push({name: 'admin-pages', params: {page: 'products'}})
                         break;
+                    case "fetch":
+                        this.activeComponent = Fetch
+                        this.$router.push({name: 'fetch', params: {page: 'api/fetch'}})
+                        break;
                     default:
                         this.activeComponent = Main
                         this.$router.push({name: 'admin'})
                         break;
                 }
-            }
+            },
+            
         }
     }
     </script>

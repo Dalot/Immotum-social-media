@@ -126,7 +126,23 @@ class UserController extends Controller
      */
     public function showOrders(User $user)
     {
-        return response()->json($user->orders()->with(['product'])->get());
+        $orders = $user->orders()->with(['product'])->where('user_id', $user->id )->get() ;
+        
+       
+        
+        return response()->json($orders);
+        dd($order_ids);
+        $client = new Client();
+            $res = $client->request('POST', 'https://instant-fans.com/api/v2',
+            [
+                'query' =>
+                [
+                    'key' => env('INSTANT_FANS_API_KEY'),
+                    'action' => 'status',
+                    'orders' => implode(",", (array)$order_ids)
+                ]
+            ]);
+        return response()->json($user->orders()->with(['product'])->where('user_id', 2)->get());
     }
     /**
      * Show the form for editing the specified resource.

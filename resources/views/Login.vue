@@ -51,6 +51,7 @@
 
                         axios.post('api/login', {email, password}).then(response => {
                             let user = response.data.user
+                            
                             let is_admin = user.is_admin
 
                             localStorage.setItem('ImmotumInstantFans.user', JSON.stringify(user))
