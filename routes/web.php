@@ -12,45 +12,13 @@
 */
 
 
-/*
-    Get Projects - index
-    Get projects/create - create
-    Get projects/1 - show
-    Get projects/1/edit - edit
-    
-    Post /projects - store
-    
-    Patch /projects/1 - update
-    
-    Delete /projects/1 - destroy
-    
-*/
 
-use App\Notifications\SubscriptionRenewalFailed;
-
-Route::get("/", 'PagesController@home');
-
-Route::get("homepage", 'PagesController@homepage');
-
-Route::get("/notification", function(){
-    $user = App\User::first();
-    
-    $user->notify(new SubscriptionRenewalFailed);
-    
-    return "done";
-});
+Route::get('/{any}', function(){
+            return view('landing');
+    })->where('any', '.*');
 
 
-Route::resource('projects', 'ProjectsController');
-Route::resource('user', 'UserController');
 
-Auth::routes(['verify' => true]);
 
-Route::get('/home', 'HomeController@index')->middleware('verified');
-Route::get('/stripe', 'StripeController@index')->middleware('verified');
-Route::post('/stripe', 'StripeController@charge');
-Route::post('/charge-success', 'StripeController@success')->middleware('verified');
-
-Route::get('/api/products/fetch', 'InstantFansController@store')->middleware('auth')->middleware('admin');
 
 

@@ -6,6 +6,8 @@ use Illuminate\Http\Resources\Json\JsonResource;
 
 class InstantFansResource extends JsonResource
 {
+    
+    
     /**
      * Transform the resource into an array.
      *
@@ -20,7 +22,9 @@ class InstantFansResource extends JsonResource
             'category_name' => $this->resource['category'],
             'original_price' => $this->resource['rate'],
             'min' => $this->resource['min'],
-            'max' => $this->resource['max']
+            'max' => $this->resource['max'],
+            'service_id' => $this->resource['service'],
+            'description' => $this->resource['description']
         ];
         
     }

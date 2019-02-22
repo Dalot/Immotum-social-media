@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use Illuminate\Support\Facades\Gate;
+use Laravel\Passport\Passport;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 
 class AuthServiceProvider extends ServiceProvider
@@ -13,7 +14,7 @@ class AuthServiceProvider extends ServiceProvider
      * @var array
      */
     protected $policies = [
-        'App\Project' => 'App\Policies\ProjectPolicy',
+        
     ];
 
     /**
@@ -24,12 +25,9 @@ class AuthServiceProvider extends ServiceProvider
     public function boot(Gate $gate)
     {
         $this->registerPolicies();
-
+        Passport::routes();
         
 
-        $gate::before(function ($user)
-        {
-            return $user->id == 2 ; // only admin can see all projects -> Refactor this
-        });
+        
     }
 }

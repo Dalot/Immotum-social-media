@@ -10,6 +10,11 @@ use App\Product;
 
 class InstantFansController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('admin');
+    }
+    
     /**
      * Display a listing of the resource.
      *
@@ -17,7 +22,7 @@ class InstantFansController extends Controller
      */
     public function index()
     {
-        $this->middleware('auth');
+        return response()->json(Product::all(),200);
     }
 
     /**
@@ -26,8 +31,9 @@ class InstantFansController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function fetch()
     {
+        dd("stop");
         
          $client = new Client();
             $res = $client->request('POST', 'https://instant-fans.com/api/v2',
@@ -37,39 +43,50 @@ class InstantFansController extends Controller
                     'key' => env('INSTANT_FANS_API_KEY'),
                     'action' => 'services'
                 ]
-            ]);    
-            $results = json_decode( $res->getBody(), true );
-           
+            ]);  
+        $myClient = new Client();
+        $scrapeData = $myClient->request('POST', 'http://node.dalot.xyz:8081/scrape'); 
+        $scrapeData = json_decode( $scrapeData->getBody(), true ) ;
             
-            foreach($results as $result)
+            
+            $results = json_decode( $res->getBody(), true );
+            
+            
+            foreach($results as $key=>$result)
             {
                 $validator = Validator::make($result, [
                     'name' => ['required','min:3', 'max:255'],
                     'category' => ['required','min:3', 'max:255'],
                     'min' => ['required','min:1', 'max:255'],
                     'max' => ['required','min:1'],
-                    'rate' => ['required']
+                    'rate' => ['required'],
+                    'service' => ['required'],
+                    'type' => ['required']
                 ]);
-                if ( $validator->fails() ) {
-                    
+                
+                if ( $validator->fails() ) 
+                {
                     return $validator->errors();
-                                
                 }
                 else
                 {
                     
                     $prod = $validator->getData();
+                    $desc = (isset( $scrapeData[$key]["description"]) ? $scrapeData[$key]["description"] : $prod["type"] );
+                    $prod["description"] = $desc;
                     
                     $prod = InstantFansResource::make($prod)->resolve();
                     $final_results[] = $prod;
+                  
+                   ;
                 }
             }
             
+            
             $final_collection = collect($final_results);
-           
-            
             $chunks = $final_collection->chunk(100);
-            
+            $aResponse = [];
+
             foreach ($chunks as $chunk)
             {
                foreach($chunk as $row)
@@ -79,16 +96,21 @@ class InstantFansController extends Controller
                         'original_price' => $row['original_price'], 
                         'max'  => $row['max'],
                         'min' =>  $row['min'],
-                        'category_name' => $row['category_name']
+                        'category_name' => $row['category_name'],
+                        'description' => $row['description']
                     ]);
+                    
+                    $aResponse[] = [
+                        'status' => (bool) $row,
+                        'data'   => $row,
+                        'message' => $row ? 'Product Created!' : 'Error Creating Product'
+                    ];
                   
                }
             }
             
-            return 'done'; 
-            
-          
-            
+        return response()->json($aResponse, 200);
+ 
     }
 
     /**
@@ -97,9 +119,9 @@ class InstantFansController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Product $product)
     {
-        //
+        return response()->json($product,200); 
     }
 
     /**

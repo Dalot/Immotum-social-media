@@ -12,14 +12,5 @@ const mix = require('laravel-mix');
  */
 
 mix.js('resources/js/app.js', 'public/js')
-   .js('public/js/bootstrap.js', 'public/js')
-   .js('resources/js/bulma.js', 'public/js')
-   .styles([
-        'public/css/vendor/login.css',
-        'public/css/vendor/project.css',
-        'public/css/vendor/dasboard.css'
-    ], 'public/css/all.css')
-   .sass('resources/sass/_variables.scss', 'public/css')
-   .sass('resources/sass/spacing.scss', 'public/css')
-    .extract()
-    .version();
+   .js('resources/js/bootstrap.js', 'public/js')
+   .sass('resources/sass/app.scss', 'public/css');
