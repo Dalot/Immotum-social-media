@@ -7,6 +7,7 @@ use GuzzleHttp\Client;
 use App\API\InstantFans;
 use Validator;
 use App\Http\Resources\InstantFansResource;
+use App\Repositories\InstantFansRepository;
 use App\Product;
 
 class InstantFansController extends Controller
@@ -33,81 +34,57 @@ class InstantFansController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function fetch()
+    public function fetch(InstantFansRepository $InstantFansRepository)
     {
-       
-        
-        
+
         $myClient = new Client();
+        
+        // Scrape instant-fans website to fetch all the descriptions.
         $scrapeData = $myClient->request('POST', 'http://node.dalot.xyz:8081/scrape'); 
         $scrapeData = json_decode( $scrapeData->getBody(), true ) ;
         
-        
+        // Get all the servies available from the Instant Fans API 
         $results = $this->InstantFans->getServices();
             
+        // Validate the data received from the Instant-fans API
+        foreach($results as $key=>$result)
+        {
+            $validator = Validator::make($result, [
+                'name' => ['required','min:3', 'max:255'],
+                'category' => ['required','min:3', 'max:255'],
+                'min' => ['required','min:1', 'max:255'],
+                'max' => ['required','min:1'],
+                'rate' => ['required'],
+                'service' => ['required'],
+                'type' => ['required']
+            ]);
             
-            foreach($results as $key=>$result)
+            if ( $validator->fails() ) 
             {
-                $validator = Validator::make($result, [
-                    'name' => ['required','min:3', 'max:255'],
-                    'category' => ['required','min:3', 'max:255'],
-                    'min' => ['required','min:1', 'max:255'],
-                    'max' => ['required','min:1'],
-                    'rate' => ['required'],
-                    'service' => ['required'],
-                    'type' => ['required']
-                ]);
+                return $validator->errors();
+            }
+           
                 
-                if ( $validator->fails() ) 
-                {
-                    return $validator->errors();
-                }
-                else
-                {
-                    
-                    $prod = $validator->getData();
-                    $desc = (isset( $scrapeData[$key]["description"]) ? $scrapeData[$key]["description"] : $prod["type"] );
-                   
-                    
-                    $prod["description"] = $desc;
-                    
-                    
-                    $prod = InstantFansResource::make($prod)->resolve();
-                    $final_results[] = $prod;
-                  
-                   ;
-                }
-            }
+            $prod = $validator->getData();
             
+            $desc = (isset( $scrapeData[$key]["description"]) ? $scrapeData[$key]["description"] : $prod["type"] );
+            $prod["description"] = $desc;
             
-            $final_collection = collect($final_results);
-            $chunks = $final_collection->chunk(100);
-            $aResponse = [];
+            // Convert the API data to our model and add it to $final_results
+            $prod = InstantFansResource::make($prod)->resolve();
+            $final_results[] = $prod;
+              
+               
+            
+        }
+        
+        // Divide it up in chunks
+        $chunks = collect($final_results)->chunk(100);
 
-            foreach ($chunks as $chunk)
-            {
-               foreach($chunk as $row)
-               {
-                   Product::updateOrCreate( ['title' => $row['title'] ], 
-                    [
-                        'original_price' =>  $row['original_price'], 
-                        'max'  => $row['max'],
-                        'min' =>  $row['min'],
-                        'category_name' => $row['category_name'],
-                        'description' => $row['description'],
-                        'our_price' =>  $row['our_price']
-                    ]);
-                    
-                    $aResponse[] = [
-                        'status' => (bool) $row,
-                        'data'   => $row,
-                        'message' => $row ? 'Product Created!' : 'Error Creating Product'
-                    ];
-                  
-               }
-            }
+        // Update or Create each product received by the API
+        $all_results = $InstantFansRepository->updateOrCreate($chunks); 
             
-        return response()->json($aResponse, 200);
+        return response()->json($all_results, 200);
  
     }
 
