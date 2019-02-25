@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
-use GuzzleHttp\Client;
+use App\API\InstantFans;
 use App\User;
 use App\Order;
 use Auth;
@@ -126,7 +126,7 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function showOrders(User $user)
+    public function showOrders(User $user, InstantFans $InstantFans)
     {
         $orders = $user->orders()->with(['product'])->where('user_id', $user->id )->get();
         $order_api_ids = Order::select('order_api_id')->where('user_id', $user->id)->get()->toArray();
@@ -137,19 +137,8 @@ class UserController extends Controller
             $arr[] = $id["order_api_id"];
         }
         
-        
-        $client = new Client();
-        $res = $client->request('POST', 'https://instant-fans.com/api/v2',
-        [
-            'query' =>
-            [
-                'key' => env('INSTANT_FANS_API_KEY'),
-                'action' => 'status',
-                'orders' => implode(",", $arr)
-            ]
-        ]);
-            
-        $res = json_decode( $res->getBody(), true );
+
+        $res = $InstantFans->getStatuses($arr);
         
         if(!isset($res))
         {

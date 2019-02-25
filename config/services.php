@@ -43,6 +43,10 @@ return [
     'twitter' => [
         'key' => env('TWITTER_KEY'),
         'secret' => env('TWITTER_SECRET')
+        ],
+    
+    'instant-fans' => [
+        'key' => env('INSTANT_FANS_API_KEY')
         ]
 
 ];

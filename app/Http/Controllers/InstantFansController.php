@@ -4,15 +4,16 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use GuzzleHttp\Client;
+use App\API\InstantFans;
 use Validator;
 use App\Http\Resources\InstantFansResource;
 use App\Product;
 
 class InstantFansController extends Controller
 {
-    public function __construct()
+    public function __construct(InstantFans $InstantFans)
     {
-        
+        $this->InstantFans = $InstantFans;
     }
     
     /**
@@ -36,22 +37,13 @@ class InstantFansController extends Controller
     {
        
         
-         $client = new Client();
-            $res = $client->request('POST', 'https://instant-fans.com/api/v2',
-            [
-                'query' =>
-                [
-                    'key' => env('INSTANT_FANS_API_KEY'),
-                    'action' => 'services'
-                ]
-            ]);  
+        
         $myClient = new Client();
         $scrapeData = $myClient->request('POST', 'http://node.dalot.xyz:8081/scrape'); 
         $scrapeData = json_decode( $scrapeData->getBody(), true ) ;
-            
-            
-            $results = json_decode( $res->getBody(), true );
-            $results = array_slice($results, 0, 5);
+        
+        
+        $results = $this->InstantFans->getServices();
             
             
             foreach($results as $key=>$result)
