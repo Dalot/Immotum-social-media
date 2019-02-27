@@ -26,11 +26,11 @@
     </template>
 
     <script>
-    import Main from '../js/components/Admin/Main'
-    import Users from '../js/components/Admin/Users'
-    import Products from '../js/components/Admin/Products'
-    import Orders from '../js/components/Admin/Orders'
-    import Fetch from '../views/Fetch'
+    import Main from '../../js/components/Admin/Main';
+    import Users from '../../js/components/Admin/Users';
+    import Products from '../../js/components/Admin/Products';
+    import Orders from '../../js/components/Admin/Orders';
+    import Fetch from './Fetch';
 
     export default {
         data() {

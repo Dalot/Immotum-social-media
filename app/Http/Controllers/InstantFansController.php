@@ -43,10 +43,10 @@ class InstantFansController extends Controller
         $scrapeData = $myClient->request('POST', 'http://node.dalot.xyz:8081/scrape'); 
         $scrapeData = json_decode( $scrapeData->getBody(), true ) ;
         
-        // Get all the servies available from the Instant Fans API 
+        // Get all the services available from the Instant Fans API 
         $results = $this->InstantFans->getServices();
             
-        // Validate the data received from the Instant-fans API
+        // Validate the data received from the Instant Fans API
         foreach($results as $key=>$result)
         {
             $validator = Validator::make($result, [
@@ -96,6 +96,7 @@ class InstantFansController extends Controller
      */
     public function show(Product $product)
     {
+        
         return response()->json($product,200); 
     }
 

@@ -3,16 +3,16 @@ import VueRouter from 'vue-router';
 
 Vue.use(VueRouter);
 
-import App from '../views/App';
-import Home from '../views/Home';
-import Login from '../views/Login';
-import Register from '../views/Register';
-import SingleProduct from '../views/SingleProduct';
-import Checkout from '../views/Checkout';
-import Confirmation from '../views/Confirmation';
-import UserBoard from '../views/UserBoard';
-import Admin from '../views/Admin';
-import Fetch from '../views/Fetch';
+import App from '../views/Vue/App';
+import Home from '../views/Vue/Home';
+import Login from '../views/Vue/Login';
+import Register from '../views/Vue/Register';
+import SingleProduct from '../views/Vue/SingleProduct';
+import Checkout from '../views/Vue/Checkout';
+import Confirmation from '../views/Vue/Confirmation';
+import UserBoard from '../views/Vue/UserBoard';
+import Admin from '../views/Vue/Admin';
+import Fetch from '../views/Vue/Fetch';
 
 const router = new VueRouter({
     mode: 'history',

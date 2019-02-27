@@ -31,10 +31,6 @@ class User extends Authenticatable implements MustVerifyEmail
         'password', 'remember_token',
     ];
     
-    public function projects()
-    {
-        return $this->hasMany(Project::class, 'owner_id');
-    }
     
     public function orders()
     {

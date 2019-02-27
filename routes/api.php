@@ -43,15 +43,19 @@ Route::group(['middleware' => ['auth:api','json.response']], function(){
         
         Route::get('/users','UserController@index');
         Route::get('users/{user}','UserController@show');
-        Route::patch('users/{user}','UserController@update');
         Route::get('users/{user}/orders','UserController@showOrders');
+        Route::get('/stripe', 'StripeController@index')->middleware('verified');
+        
+        Route::patch('users/{user}','UserController@update');
         Route::patch('products/{product}/units/add','InstantFansController@updateUnits');
         Route::patch('orders/{order}/deliver','OrderController@deliverOrder');
-        Route::resource('/orders', 'OrderController');
-        Route::resource('/products', 'InstantFansController')->except(['index','show','store']);
-        Route::get('/stripe', 'StripeController@index')->middleware('verified');
+        
         Route::post('/stripe', 'StripeController@charge');
         Route::post('/charge-success', 'StripeController@success')->middleware('verified');
+        
+        Route::resource('/orders', 'OrderController');
+        Route::resource('/products', 'InstantFansController')->except(['index','show','store']);
+        Route::resource('/cart', 'CartController');
        
     });
 // ========================================================================== //

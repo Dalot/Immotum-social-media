@@ -56,9 +56,22 @@
             this.isLoggedIn = localStorage.getItem('ImmotumInstantFans.jwt') != null
         },
         beforeMount() {
-            axios.get(`/api/products/${this.pid}`).then(response => this.product = response.data)
+            this.user = JSON.parse(localStorage.getItem('ImmotumInstantFans.user'));
 
+            
+            axios.defaults.headers.common['Authorization'] = 'Bearer ' + localStorage.getItem('ImmotumInstantFans.jwt');
+            
+            //axios.get(`/api/products/${this.pid}`).then(response => this.product = response.data)
+            
+            axios.get('/api/cart').then( (response) => {
+                console.log(response);
+                this.cartItems = response.data; 
+                console.log(this.cartItems);
+                });
+            
+                
             if (localStorage.getItem('ImmotumInstantFans.jwt') != null) {
+                
                 this.user = JSON.parse(localStorage.getItem('ImmotumInstantFans.user'))
                 axios.defaults.headers.common['Content-Type'] = 'application/json'
                 axios.defaults.headers.common['Authorization'] = 'Bearer ' + localStorage.getItem('ImmotumInstantFans.jwt')
