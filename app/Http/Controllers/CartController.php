@@ -13,11 +13,10 @@ class CartController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        dump(Cart::content());
-        $items = Cart::content();
-        return response()->json( $items, 200);
+        $items = Cart::instance('test')->content();
+        return response($items);
     }
 
     /**
@@ -45,13 +44,15 @@ class CartController extends Controller
         $price = $request->price;
         
         Cart::add([
-            'id' => $id, 
+            'id' => $id,
             'name' => $title, 
             'qty' => $quantity, 
             'price' => $price 
-            ])->associate('App\Product');
+            ]);
         
-        return response()->json("success",200); 
+        $cartItems = Cart::content()->toArray();
+        
+      return response()->json($cartItems,200);
     }
 
     /**

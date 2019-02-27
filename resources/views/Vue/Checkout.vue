@@ -1,15 +1,19 @@
 <template>
         <div class="container">
-            <div class="row">
+            
+            <div class="row" >
                 <div class="col-md-8 offset-md-2">
-                    <div class="order-box">
-                        <img :src="product.image" :alt="product.name">
-                        <h2 class="title" v-html="product.name"></h2>
-                        <p class="small-text text-muted float-left">$ {{product.price}}</p>
-                        <p class="small-text text-muted float-right">Available Units: {{product.units}}</p>
-                        <br>
-                        <hr>
-                        <label class="row"><span class="col-md-2 float-left">Quantity: </span><input type="number" name="units" min="1" :max="product.units" class="col-md-2 float-left" v-model="quantity" @change="checkUnits"></label>
+                    <div v-for="cartItem in cartItems">
+                        
+                        <div class="order-box" v-for="item in cartItem">
+                            <img :src="product.image" :alt="product.name">
+                            <h2 class="title" v-html="item.name"></h2>
+                            <p class="small-text text-muted float-left">$ {{item.price}}</p>
+                            <p class="small-text text-muted float-right">Available Units: {{product.units}}</p>
+                            <br>
+                            <hr>
+                            <label class="row"><span class="col-md-2 float-left">Quantity: </span><input type="number" name="units" min="1" :max="product.units" class="col-md-2 float-left" v-model="item.qty" @change="checkUnits"></label>
+                        </div>
                     </div>
                     <br>
                     <div>
@@ -56,26 +60,28 @@
             this.isLoggedIn = localStorage.getItem('ImmotumInstantFans.jwt') != null
         },
         beforeMount() {
-            this.user = JSON.parse(localStorage.getItem('ImmotumInstantFans.user'));
-
-            
-            axios.defaults.headers.common['Authorization'] = 'Bearer ' + localStorage.getItem('ImmotumInstantFans.jwt');
-            
-            //axios.get(`/api/products/${this.pid}`).then(response => this.product = response.data)
-            
-            axios.get('/api/cart').then( (response) => {
-                console.log(response);
-                this.cartItems = response.data; 
-                console.log(this.cartItems);
-                });
-            
-                
             if (localStorage.getItem('ImmotumInstantFans.jwt') != null) {
                 
                 this.user = JSON.parse(localStorage.getItem('ImmotumInstantFans.user'))
                 axios.defaults.headers.common['Content-Type'] = 'application/json'
                 axios.defaults.headers.common['Authorization'] = 'Bearer ' + localStorage.getItem('ImmotumInstantFans.jwt')
+
+                
             }
+              let tempCartItems =  JSON.parse( localStorage.getItem('ImmotumInstantFans.cart') );
+              console.log(tempCartItems);
+              this.cartItems = Object.keys(tempCartItems).map(function(key) {
+                                  var ret = {};
+                                  ret[key] = tempCartItems[key];
+                                  return ret;
+                                });
+              
+              console.log(this.cartItems);
+            
+            
+            //axios.get(`/api/products/${this.pid}`).then(response => this.product = response.data)
+
+            
         },
         methods : {
             login() {

@@ -14,6 +14,11 @@ import UserBoard from '../views/Vue/UserBoard';
 import Admin from '../views/Vue/Admin';
 import Fetch from '../views/Vue/Fetch';
 
+window.events = new Vue();
+window.flash = function(message) {
+    window.events.$emit('flash',message);
+};
+
 const router = new VueRouter({
     mode: 'history',
     routes: [

@@ -14,7 +14,7 @@
                                     
                                         
                                    
-                                        <span class="small-text text-muted float-right">$ {{product.original_price}}</span>
+                                        <span class="small-text text-muted float-right">$ {{product.our_price}}</span>
                                     </h5>
                                     <p v-html="product.description"></p>
                                     <button class="col-md-4 btn btn-sm btn-primary float-right">Buy Now</button>

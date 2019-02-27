@@ -18,6 +18,7 @@ class InstantFansResource extends JsonResource
     {
         $our_price =  $this->resource['rate'] * 1.3;
         
+        
         return [
             'title' => $this->resource['name'],
             'category_name' => $this->resource['category'],

@@ -39,7 +39,7 @@ Route::post('register', 'UserController@register');
 // ====================== MUST BE AUTHENTICATED ROUTES ====================== //
 
 
-Route::group(['middleware' => ['auth:api','json.response']], function(){
+Route::group(['middleware' => ['api','json.response']], function(){
         
         Route::get('/users','UserController@index');
         Route::get('users/{user}','UserController@show');

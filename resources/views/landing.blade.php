@@ -10,6 +10,7 @@
     </head>
     <body>
         <div id="app">
+            
             <app></app>
         </div>
         <script src="{{ mix('js/bootstrap.js') }}"></script>
