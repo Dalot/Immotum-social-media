@@ -16,8 +16,9 @@ class CartController extends Controller
      */
     public function index(Request $request)
     {
+        $cartSession = $request->session()->get('cart');
         
-        
+        return response()->json($cartSession,200);
     }
 
     /**
@@ -38,13 +39,8 @@ class CartController extends Controller
      */
     public function store(Request $request)
     {
-        
-        $id = $request->product_id;
-        $title = $request->title;
-        $quantity = $request->quantity;
-        $price = $request->price;
-        
-        
+      
+        $id = $request->get('id');
         
         $product = Product::find($id);
         $oldCart = Session::has('cart') ? Session::get('cart') : null;
@@ -54,7 +50,7 @@ class CartController extends Controller
         $request->session()->put('cart', $cart);
         
         
-        return response()->json($request->session(),200);
+        return response()->json('Item added to Cart',200);
     }
 
     /**

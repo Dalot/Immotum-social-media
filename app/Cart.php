@@ -22,7 +22,7 @@ class Cart
     
     public function add($item, $id)
     {
-        $storedItem = ['qty' => 0, 'price' => $item->price, 'item' => $item];
+        $storedItem = ['qty' => 0, 'price' => $item->our_price, 'item' => $item];
         
         if($this->items)
         {
@@ -32,9 +32,9 @@ class Cart
             }
         }
         $storedItem['qty']++;
-        $storedItem['price'] = $item->price * $storedItem['qty'];
+        $storedItem['price'] = $item->our_price * $storedItem['qty'];
         $this->items[$id] = $storedItem;
         $this->totalQty++;
-        $this->totalPrice += $item->price;
+        $this->totalPrice += $item->our_price;
     }
 }

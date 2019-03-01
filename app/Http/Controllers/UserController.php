@@ -9,6 +9,7 @@ use App\User;
 use App\Order;
 use Auth;
 use Carbon\Carbon;
+use App\Repositories\InstantFansRepository;
 
 class UserController extends Controller
 {
@@ -71,29 +72,16 @@ class UserController extends Controller
      * @return \Illuminate\Http\Response
      */
     
-    public function register(Request $request)
+    public function register(Request $request, InstantFansRepository $InstantFansRepository)
     {
-        $validator = Validator::make($request->all(), [
-                'name' => 'required|max:50',
-                'email' => 'required|email',
-                'password' => 'required|min:6',
-                'c_password' => 'required|same:password',
-            ]);
+        $user = $InstantFansRepository->createUser($request);
+        
+        $token = $user->createToken('ImmotumInstantFans')->accessToken;
     
-            if ($validator->fails()) {
-                return response()->json(['error' => $validator->errors()], 401);
-            }
-    
-            $data = $request->only(['name', 'email', 'password']);
-            $data['password'] = bcrypt($data['password']);
-    
-            $user = User::create($data);
-            $user->is_admin = 0;
-    
-            return response()->json([
-                'user' => $user,
-                'token' => $user->createToken('ImmotumInstantFans')->accessToken,
-            ]);
+        return response()->json([
+            'user' => $user,
+            'token' => $token,
+        ]);
     }
     
     

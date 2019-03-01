@@ -2,6 +2,8 @@
 namespace App\Repositories;
 
 use App\Product;
+use Illuminate\Support\Facades\Validator;
+use App\User;
 
 class InstantFansRepository
 {
@@ -35,4 +37,35 @@ class InstantFansRepository
             
         return $aResponse;
     }
+    
+    
+    
+    
+    public function createUser($request)
+    {
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|max:50',
+            'email' => 'required|email',
+            'password' => 'required|min:6',
+            'c_password' => 'required|same:password',
+        ]);
+            
+        if ($validator->fails()) {
+            return response()->json(['error' => $validator->errors()], 401);
+        }
+        
+        $data = $request->only(['name', 'email', 'password']);
+        
+        
+        
+        $data['password'] = bcrypt($data['password']);
+
+        $user = User::create($data);
+        $user->is_admin = 0;
+
+        
+        
+        return $user;
+    }
+    
 }

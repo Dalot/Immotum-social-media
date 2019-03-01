@@ -13,7 +13,7 @@
             <script
                     src="https://checkout.stripe.com/checkout.js" class="stripe-button"
                     data-key="{{env('STRIPE_PUB_KEY')}}"
-                    data-amount="1999"
+                    data-amount=""
                     data-name="Stripe Demo"
                     data-description="Online course about integrating Stripe"
                     data-image="https://stripe.com/img/documentation/checkout/marketplace.png"

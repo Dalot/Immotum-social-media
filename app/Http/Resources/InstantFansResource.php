@@ -17,7 +17,7 @@ class InstantFansResource extends JsonResource
     public function toArray($request)
     {
         $our_price =  $this->resource['rate'] * 1.3;
-        
+        $our_price = round($our_price,2);
         
         return [
             'title' => $this->resource['name'],
