@@ -5,22 +5,8 @@
             </div>
             <div class="container">
                 <div class="row">
-                    <div class="col-md-12">
-                        <div class="row">
-                            <div class="col-md-6 product-box" v-for="(product,index) in products" @key="index">
-                                <router-link :to="{ path: '/products/'+product.id}">
-                                    <!--<img :src="product.image" :alt="product.name">-->
-                                    <h5><span v-html="product.title"></span>
-                                    
-                                        
-                                   
-                                        <span class="small-text text-muted float-right">$ {{product.our_price}}</span>
-                                    </h5>
-                                    <p v-html="product.description"></p>
-                                    <button class="col-md-4 btn btn-sm btn-primary float-right">Buy Now</button>
-                                </router-link>
-                            </div>
-                        </div>
+                    <div class="col-md-4" v-for="product in products">
+                        <card v-bind:product="product"></card>
                     </div>
                 </div>
             </div>
@@ -28,14 +14,26 @@
     </template>
 
     <script>
+     import Card from '../../js/components/partials/Card.vue';
+    
         export default {
+            
             data(){
                 return {
-                    products : []
+                    products : [],
+                    categories : []
                 }
             },
+            components: {
+              Card  
+            },
             mounted(){
-                axios.get("api/products/").then(response => this.products = response.data)      
+                axios.get("api/products/").then(response => {
+                    
+                    this.products = response.data[0];
+                    this.categories = response.data[1];
+                    
+                    });      
             }
         }
     </script>

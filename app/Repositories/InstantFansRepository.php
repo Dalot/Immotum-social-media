@@ -20,7 +20,8 @@ class InstantFansRepository
                         'min' =>  $row['min'],
                         'category_name' => $row['category_name'],
                         'description' => $row['description'],
-                        'our_price' =>  $row['our_price']
+                        'our_price' =>  $row['our_price'],
+                        'type' => $row['type']
                     ]);
                     
                     $aResponse[] = [

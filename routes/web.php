@@ -11,7 +11,9 @@
 |
 */
 
-
+Route::group(['middleware' => ['web']], function(){
+    Route::resource('/cart', 'CartController');
+});
 
 Route::get('/{any}', function(){
             return view('landing');

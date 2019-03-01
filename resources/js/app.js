@@ -3,6 +3,9 @@ import VueRouter from 'vue-router';
 
 Vue.use(VueRouter);
 
+import 'bootstrap-css-only/css/bootstrap.min.css'; 
+import 'mdbvue/build/css/mdb.css';
+
 import App from '../views/Vue/App';
 import Home from '../views/Vue/Home';
 import Login from '../views/Vue/Login';
@@ -32,6 +35,7 @@ const router = new VueRouter({
             path: '/login',
             name: 'login',
             component: Login
+            
         },
         {
             path: '/register',
@@ -95,29 +99,43 @@ const router = new VueRouter({
 });
 
 router.beforeEach((to, from, next) => {
+    
     if (to.matched.some(record => record.meta.requiresAuth)) {
         
         if (localStorage.getItem('ImmotumInstantFans.jwt') == null) {
+            
             next({
                 path: '/login',
                 params: { nextUrl: to.fullPath }
             });
         } else {
             let user = JSON.parse(localStorage.getItem('ImmotumInstantFans.user'))
+            
             if (to.matched.some(record => record.meta.is_admin)) {
+                
                 if (user.is_admin == 1) {
+                    
                     next();
                 }
                 else {
+                    
                     next({ name: 'userboard' });
                 }
             }
             else if (to.matched.some(record => record.meta.is_user)) {
                 if (user.is_admin == 0) {
+                    if (to.name == "login")
+                    {
+                        next({name:'userboard'});
+                    }
+                    else
+                    {
+                        next();
+                    }
                     next();
                 }
                 else {
-                    next({ name: 'admin' });
+                    next({ name: 'userboard' });
                 }
             }
             next();

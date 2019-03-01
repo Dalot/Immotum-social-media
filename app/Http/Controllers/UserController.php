@@ -8,6 +8,7 @@ use App\API\InstantFans;
 use App\User;
 use App\Order;
 use Auth;
+use Carbon\Carbon;
 
 class UserController extends Controller
 {
@@ -43,10 +44,20 @@ class UserController extends Controller
 
         if (Auth::attempt($credentials)) {
             $status = 200;
+            $token = Auth::user()->createToken('ImmotumInstantFans')->accessToken;
+            
+      
             $response = [
                 'user' => Auth::user(),
-                'token' => Auth::user()->createToken('ImmotumInstantFans')->accessToken,
+                'token' => $token,
+                'token_type' => 'Bearer'
             ];
+            
+            
+            
+            
+            
+            return response()->json($response, $status);
         }
 
         return response()->json($response, $status);

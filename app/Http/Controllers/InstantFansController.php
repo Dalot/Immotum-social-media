@@ -24,8 +24,10 @@ class InstantFansController extends Controller
      */
     public function index()
     {   
+        $categories = Product::select('category_name')->distinct()->get();
         
-        return response()->json(Product::all(),200);
+        
+        return response()->json( [Product::all(), $categories],200);
     }
 
     /**
@@ -67,7 +69,7 @@ class InstantFansController extends Controller
                 
             $prod = $validator->getData();
             
-            $desc = (isset( $scrapeData[$key]["description"]) ? $scrapeData[$key]["description"] : $prod["type"] );
+            $desc = (isset( $scrapeData[$key]["description"]) ? $scrapeData[$key]["description"] : "" );
             $prod["description"] = $desc;
             
             // Convert the API data to our model and add it to $final_results

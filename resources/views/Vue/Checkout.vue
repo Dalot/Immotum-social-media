@@ -69,7 +69,7 @@
                 
             }
               let tempCartItems =  JSON.parse( localStorage.getItem('ImmotumInstantFans.cart') );
-              console.log(tempCartItems);
+              
               this.cartItems = Object.keys(tempCartItems).map(function(key) {
                                   var ret = {};
                                   ret[key] = tempCartItems[key];
@@ -79,7 +79,10 @@
               console.log(this.cartItems);
             
             
-            //axios.get(`/api/products/${this.pid}`).then(response => this.product = response.data)
+            axios.get(`/api/cart`).then( (response) => {
+                this.product = response.data
+                console.log("Cart::contet(): " + response.data)
+                });
 
             
         },

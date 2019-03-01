@@ -22,13 +22,19 @@
                     </div>
                 </div>
             </nav>
+            
             <main class="py-4">
                 <router-view @loggedIn="change"></router-view>
             </main>
+            <Footer></Footer>
         </div>
+        
 </template>
 
 <script>
+
+import Footer from '../../js/components/partials/Footer.vue';
+
     export default {
         data() {
             return {
@@ -36,6 +42,9 @@
                 user_type: 0,
                 isLoggedIn: localStorage.getItem('ImmotumInstantFans.jwt') != null
             }
+        },
+        components: {
+            Footer
         },
         mounted() {
             this.setDefaults()

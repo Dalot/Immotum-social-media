@@ -1,0 +1,17 @@
+PHPUnit 7.5.6 by Sebastian Bergmann and contributors.
+
+..F.                                                                4 / 4 (100%)
+
+Time: 194 ms, Memory: 24.00 MB
+
+There was 1 failure:
+
+1) Tests\Feature\Auth\LoginTest::test_user_can_login_with_correct_credentials
+Expected status code 200 but received 405.
+Failed asserting that false is true.
+
+/var/www/dalot.xyz/laracast/vendor/laravel/framework/src/Illuminate/Foundation/Testing/TestResponse.php:133
+/var/www/dalot.xyz/laracast/tests/Feature/Auth/LoginTest.php:50
+
+FAILURES!
+Tests: 4, Assertions: 4, Failures: 1.

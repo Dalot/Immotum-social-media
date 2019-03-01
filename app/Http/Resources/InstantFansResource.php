@@ -27,7 +27,8 @@ class InstantFansResource extends JsonResource
             'min' => $this->resource['min'],
             'max' => $this->resource['max'],
             'service_id' => $this->resource['service'],
-            'description' => $this->resource['description']
+            'description' => $this->resource['description'],
+            'type' => $this->resource['type']
         ];
         
     }

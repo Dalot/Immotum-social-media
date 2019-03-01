@@ -41,6 +41,7 @@
 
             axios.defaults.headers.common['Authorization'] = 'Bearer ' + localStorage.getItem('ImmotumInstantFans.jwt');
             
+            
             let url = `/api/products/${this.$route.params.id}`
             axios.get(url).then(response => {
                 this.product = response.data;
@@ -52,16 +53,14 @@
         {
             addToCart() {
             
-                let product_id = this.product["id"];
-                let price = this.product["our_price"];
-                let title = this.product["title"];
-                let quantity = this.quantity;
-                let url = `/api/cart`;
                 
-                axios.post(url, { product_id, price, title, quantity }).then( (response) => {
+                let urlToAddCart = `/api/cart`;
+                let product = this.product;
+                
+                axios.post(urlToAddCart, { product }).then( (response) => {
                     
                     let cartItems = response.data;
-                    localStorage.setItem('ImmotumInstantFans.cart', JSON.stringify(cartItems));
+                   
                     flash('Added Product to cart.', 'success');
                 
                 });

@@ -18,7 +18,7 @@ use Illuminate\Http\Request;
 // ====================== PRODUCTS ====================== //
 Route::get('/products', 'InstantFansController@index');
 Route::get('/products/{product}', 'InstantFansController@show');
-Route::get('/fetch', 'InstantFansController@fetch');
+
 // ====================================================== //
 
 
@@ -34,13 +34,14 @@ Route::post('register', 'UserController@register');
 
 // ============================================================ //
 
-
-
+Route::group(['middleware' => ['web']], function(){
+    Route::resource('/cart', 'CartController');
+});
 // ====================== MUST BE AUTHENTICATED ROUTES ====================== //
 
 
-Route::group(['middleware' => ['api','json.response']], function(){
-        
+Route::group(['middleware' => ['auth:api','json.response']], function(){
+        Route::get('/fetch', 'InstantFansController@fetch');
         Route::get('/users','UserController@index');
         Route::get('users/{user}','UserController@show');
         Route::get('users/{user}/orders','UserController@showOrders');
@@ -55,7 +56,7 @@ Route::group(['middleware' => ['api','json.response']], function(){
         
         Route::resource('/orders', 'OrderController');
         Route::resource('/products', 'InstantFansController')->except(['index','show','store']);
-        Route::resource('/cart', 'CartController');
+        
        
     });
 // ========================================================================== //

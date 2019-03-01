@@ -3,8 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Gloudemans\Shoppingcart\Facades\Cart;
 use App\Product;
+use App\Cart;
+use Session;
 
 class CartController extends Controller
 {
@@ -15,8 +16,8 @@ class CartController extends Controller
      */
     public function index(Request $request)
     {
-        $items = Cart::instance('test')->content();
-        return response($items);
+        
+        
     }
 
     /**
@@ -43,16 +44,17 @@ class CartController extends Controller
         $quantity = $request->quantity;
         $price = $request->price;
         
-        Cart::add([
-            'id' => $id,
-            'name' => $title, 
-            'qty' => $quantity, 
-            'price' => $price 
-            ]);
         
-        $cartItems = Cart::content()->toArray();
         
-      return response()->json($cartItems,200);
+        $product = Product::find($id);
+        $oldCart = Session::has('cart') ? Session::get('cart') : null;
+        $cart = new Cart($oldCart);
+        $cart->add($product, $product->id);
+        
+        $request->session()->put('cart', $cart);
+        
+        
+        return response()->json($request->session(),200);
     }
 
     /**
