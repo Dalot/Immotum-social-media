@@ -9,7 +9,7 @@ class Product extends Model
 {
     use SoftDeletes;
     
-    protected $fillable = ['title','category_name','original_price','min','max',"description", "our_price", "type"];
+    protected $fillable = ['title','category_name','original_price','min','max',"description", "our_price", "type", "service_id"];
     
     public function orders()
     {

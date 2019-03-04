@@ -6,6 +6,7 @@ use App\Order;
 
 use Illuminate\Http\Request;
 use GuzzleHttp\Client;
+use App\Repositories\InstantFansRepository;
 
 class OrderController extends Controller
 {
@@ -32,25 +33,22 @@ class OrderController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Store a newly created order in our database AND in Instant-Fans.
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Request $request, InstantFansRepository $InstantFansRepository)
     {
-        $order = Order::create([
-                'product_id' => $request->product_id,
-                'user_id' => Auth::id(),
-                'quantity' => $request->quantity,
-                'address' => $request->address
-            ]);
+        
+        
+        $order = $InstantFansRepository->createOrder($request);
 
-            return response()->json([
-                'status' => (bool) $order,
-                'data'   => $order,
-                'message' => $order ? 'Order Created!' : 'Error Creating Order'
-            ]);
+        return response()->json([
+            'status' => (bool) $order,
+            'data'   => $order,
+            'Order' => $order ? $order : 'Error Creating Order'
+        ]);
     }
 
     /**

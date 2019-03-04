@@ -4,6 +4,7 @@ namespace App\Repositories;
 use App\Product;
 use Illuminate\Support\Facades\Validator;
 use App\User;
+use App\Order;
 
 class InstantFansRepository
 {
@@ -15,12 +16,19 @@ class InstantFansRepository
             {
                foreach($chunk as $row)
                {
-                   Product::updateOrCreate( ['title' => $row['title'] ], 
+                   //\Debugger::dump($row['service_id']);
+                   Product::updateOrCreate( 
+                       
+                    [ 
+                        'title' => $row['title']
+                    ], 
                     [
+                        'service_id' => $row['service_id'],
                         'original_price' =>  $row['original_price'], 
                         'max'  => $row['max'],
                         'min' =>  $row['min'],
                         'category_name' => $row['category_name'],
+                        'service_id' => $row['service_id'],
                         'description' => $row['description'],
                         'our_price' =>  $row['our_price'],
                         'type' => $row['type']
@@ -66,6 +74,20 @@ class InstantFansRepository
         
         
         return $user;
+    }
+    
+    
+    public function createOrder($request)
+    {
+        $order = Order::create([
+                'product_id' => $request->product_id,
+                'order_api_id' => $request->order_api_id,
+                'user_id' => \Auth::id(),
+                'quantity' => $request->quantity,
+                'address' => $request->address
+            ]);
+            
+        return $order;    
     }
     
 }

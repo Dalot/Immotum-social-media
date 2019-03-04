@@ -9,6 +9,7 @@ use Stripe\Charge;
 use Session;
 use App\User;
 use App\Repositories\InstantFansRepository;
+use App\Users;
 
 class StripeController extends Controller
 {
@@ -29,8 +30,11 @@ class StripeController extends Controller
      function charge(Request $request, InstantFansRepository $InstantFansRepository)
     {
         $amount = $request->session()->get('cart')->totalPrice * 100;
+        $user = User::where( 'email', '=', $request->email )->first();
         
-        $user = $InstantFansRepository->createUser($request);
+        ( $user ? $user : $user = $InstantFansRepository->createUser($request));
+        
+       
        
         $token = $user->createToken('ImmotumInstantFans')->accessToken;
         
@@ -53,6 +57,10 @@ class StripeController extends Controller
         } catch (\Exception $ex) {
             return $ex->getMessage();
         }
+        
+        
+        //CREATE ORDER HERE
+        $InstantFansRepository->createOrder();
     }
     
     function success()
