@@ -24,6 +24,13 @@ class CreateOrdersTable extends Migration
             $table->timestamps();
             $table->softDeletes();
         });
+        
+        Schema::table('orders', function($table) {
+           $table->foreign( 'user_id' )
+            ->references( 'id' )->on( 'users' )
+            ->onDelete( 'cascade' )
+            ->onUpdate( 'cascade' );
+       });
     }
 
     /**

@@ -18,20 +18,20 @@ class InstantFansController extends Controller
     }
     
     /**
-     * Display a listing of the resource.
+     * Display a listing of Products
      *
      * @return \Illuminate\Http\Response
      */
     public function index()
     {   
-        $categories = Product::select('category_name')->distinct()->get();
+        //$categories = Product::select('category_name')->distinct()->get();
         
         
-        return response()->json( [Product::all(), $categories],200);
+        return response()->json( Product::all(),200);
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Fetch all services from Instant Fans and Store them as Products
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
@@ -91,7 +91,7 @@ class InstantFansController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * Return a single Product
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
@@ -115,13 +115,15 @@ class InstantFansController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Soft Delete the product
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)
     {
-        //
+        Product::find($id)->delete();
+        
+        return response()->json("Product of id " . $id . " was deleted", 200);
     }
 }

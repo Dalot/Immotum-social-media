@@ -54,10 +54,6 @@ class UserController extends Controller
                 'token_type' => 'Bearer'
             ];
             
-            
-            
-            
-            
             return response()->json($response, $status);
         }
 
@@ -115,7 +111,8 @@ class UserController extends Controller
      */
     public function show(User $user)
     {
-        return response()->json($user);
+        $data = User::where('id', $user->id)->with(['orders'])->get();
+        return response()->json($data, 200);
     }
     
     
@@ -127,7 +124,8 @@ class UserController extends Controller
      */
     public function showOrders(User $user, InstantFans $InstantFans)
     {
-        $orders = $user->orders()->with(['product'])->where('user_id', $user->id )->get();
+        $orders = Order::where('user_id', $user->id)->get();
+        dump($orders);
         $order_api_ids = Order::select('order_api_id')->where('user_id', $user->id)->get()->toArray();
         $arr = [];
         
@@ -170,9 +168,38 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update($id, Request $request)
     {
-        //
+        $user = User::find($id);
+        
+        $validator = Validator::make($request->all(), [
+            'name' => 'min:3|max:50',
+            'email' => 'email',
+            'password' => 'min:6',
+            'c_password' => 'same:password',
+        ]);
+        
+        if ($validator->fails()) {
+            return response()->json(['error' => $validator->errors()], 401);
+        }
+    
+        $data = $validator->getData();
+     
+        foreach($data as $key=>$value)
+        {
+            if ( array_key_exists("password", $data))
+            {
+                $user->password = bcrypt($data["password"]);
+            }
+            
+            
+           $user[$key] = $value;
+        }
+    
+        $user->save();
+    
+        // Flash::message('Your account has been updated!');
+        return response()->json('User profile updated', 200);
     }
 
     /**
@@ -183,6 +210,8 @@ class UserController extends Controller
      */
     public function destroy($id)
     {
-        //
+        User::find($id)->delete();
+        
+        return response()->json("User of id " . $id . " was successfully softDeleted");
     }
 }

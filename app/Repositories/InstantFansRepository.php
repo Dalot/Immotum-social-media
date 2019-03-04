@@ -16,7 +16,7 @@ class InstantFansRepository
             {
                foreach($chunk as $row)
                {
-                   //\Debugger::dump($row['service_id']);
+                   
                    Product::updateOrCreate( 
                        
                     [ 
@@ -79,6 +79,9 @@ class InstantFansRepository
     
     public function createOrder($request)
     {
+        // CREATE ORDER ON INSTANT FANS API
+        dump($request);
+        
         $order = Order::create([
                 'product_id' => $request->product_id,
                 'order_api_id' => $request->order_api_id,

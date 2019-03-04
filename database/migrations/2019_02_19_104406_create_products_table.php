@@ -18,7 +18,7 @@ class CreateProductsTable extends Migration
             $table->string('service_id')->default("unknown");
             $table->string('title');
             $table->mediumText('description')->nullable();
-            $table->string('type')->default("");
+            $table->string('type')->nullable();
             $table->string('category_name')->nullable();
             $table->unsignedInteger('category_id')->nullable();
             $table->double('original_price');

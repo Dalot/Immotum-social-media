@@ -29,7 +29,8 @@ class StripeController extends Controller
     
      function charge(Request $request, InstantFansRepository $InstantFansRepository)
     {
-        $amount = $request->session()->get('cart')->totalPrice * 100;
+        $sessionCart = $request->session()->get('cart');
+        $amount = $sessionCart->totalPrice * 100;
         $user = User::where( 'email', '=', $request->email )->first();
         
         ( $user ? $user : $user = $InstantFansRepository->createUser($request));
@@ -52,6 +53,9 @@ class StripeController extends Controller
                 'amount' => $amount,
                 'currency' => 'usd'
             ));
+            
+            //CREATE ORDER HERE
+        $InstantFansRepository->createOrder($sessionCart);
         
             return response()->json($customer, 200);;
         } catch (\Exception $ex) {
@@ -59,8 +63,7 @@ class StripeController extends Controller
         }
         
         
-        //CREATE ORDER HERE
-        $InstantFansRepository->createOrder();
+        
     }
     
     function success()

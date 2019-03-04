@@ -16,7 +16,7 @@ use Illuminate\Http\Request;
 
 
 // ====================== PRODUCTS ====================== //
-Route::get('/products', 'InstantFansController@index');
+Route::get('/products', 'InstantFansController@index')->name('products.index');
 Route::get('/products/{product}', 'InstantFansController@show');
 
 
@@ -32,8 +32,8 @@ Route::group(['middleware' => ['web']], function () {
 
 
 // ====================== AUTHENTICATION ====================== //
-Route::post('login', 'UserController@login');
-Route::post('register', 'UserController@register');
+Route::post('login', 'UserController@login')->name('users.login');
+Route::post('register', 'UserController@register')->name('users.register');
 
 
 
@@ -42,23 +42,47 @@ Route::post('register', 'UserController@register');
 
 
 Route::group(['middleware' => ['auth:api','json.response']], function(){
-        Route::post('/stripe', 'StripeController@charge')->middleware("web");
-        Route::post('/fetch', 'InstantFansController@fetch');
- 
+    
+    Route::group(['middleware' => ['admin']], function() {
+        
         Route::get('/users','UserController@index');
-        Route::get('users/{user}','UserController@show');
+        
+        Route::post('/products/fetch', 'InstantFansController@fetch')->name('products.fetch');
+        
+        Route::resource('/products', 'InstantFansController')->except(['index','show']);
+        
+    });
+    
+
         Route::get('users/{user}/orders','UserController@showOrders');
         
-        
-        Route::patch('users/{user}','UserController@update');
-        Route::patch('products/{product}/units/add','InstantFansController@updateUnits');
-        Route::patch('orders/{order}/deliver','OrderController@deliverOrder');
-        
-        
+        Route::post('/stripe', 'StripeController@charge')->middleware("web");
         Route::post('/charge-success', 'StripeController@success')->middleware('verified');
+
+
+        // Route::patch('orders/{order}/deliver','OrderController@deliverOrder');
+        Route::resource('/users', 'UserController')->except('index');
+        Route::resource('/orders', 'OrderController')->except('login, register');
         
-        Route::resource('/orders', 'OrderController');
-        Route::resource('/products', 'InstantFansController')->except(['index','show','store']);
+        /*
+            == GUEST ==
+            login -> Login user and create a token to associate to the user DOCUMENTED
+            register -> Create a new User DOCUMENTED
+            
+            == User ==
+            show -> show this user profile  with their orders DOCUMENTED
+            edit -> User page to edit profile (FRONT END)
+            destroy -> option do delete his account DOCUMENTED
+            update -> Update this profile info for this user DOCUMENTED
+            
+            == ADMIN ==
+            index -> Show all users with their orders
+            create -> An admin page to create a new User
+            
+            Non-existent
+            store -> ??
+        */
+        
         
        
     });
