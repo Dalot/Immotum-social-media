@@ -55,7 +55,7 @@ class StripeController extends Controller
             ));
             
             //CREATE ORDER HERE
-        $InstantFansRepository->createOrder($sessionCart);
+            $InstantFansRepository->createOrder($sessionCart, $user->id);
         
             return response()->json($customer, 200);;
         } catch (\Exception $ex) {

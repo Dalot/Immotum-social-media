@@ -43,9 +43,23 @@ class CartController extends Controller
         $id = $request->get('id');
         
         $product = Product::find($id);
+        
+        
+        $order_details = [
+                'link' => $request->destiny_url,
+                'comments' => $request->comments,
+                'usernames' => $request->usernames,
+                'runs' => $request->runs,
+                'interval' => $request->interval,
+                'qty_min' => $request->qty_min,
+                'qty_max' => $request->qty_max,
+                'posts' => $request->posts,
+                'delay' => $request->delay
+            ];
+        
         $oldCart = Session::has('cart') ? Session::get('cart') : null;
         $cart = new Cart($oldCart);
-        $cart->add($product, $product->id);
+        $cart->add($product, $product->id, $order_details);
         
         $request->session()->put('cart', $cart);
         

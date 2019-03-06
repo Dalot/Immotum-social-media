@@ -5,9 +5,17 @@ use App\Product;
 use Illuminate\Support\Facades\Validator;
 use App\User;
 use App\Order;
+use App\API\InstantFans;
 
 class InstantFansRepository
 {
+    
+    public function __construct(InstantFans $InstantFans)
+    {
+        $this->InstantFans = $InstantFans;
+    }
+    
+    
     public function UpdateOrCreate(object $chunks)
     {
         $aResponse = [];
@@ -77,18 +85,39 @@ class InstantFansRepository
     }
     
     
-    public function createOrder($request)
+    public function createOrder($sessionCart, $user_id)
     {
         // CREATE ORDER ON INSTANT FANS API
-        dump($request);
         
-        $order = Order::create([
-                'product_id' => $request->product_id,
-                'order_api_id' => $request->order_api_id,
-                'user_id' => \Auth::id(),
-                'quantity' => $request->quantity,
-                'address' => $request->address
-            ]);
+        foreach($sessionCart as $itemCart)
+        {
+            
+            foreach($itemCart as $orderData)
+            {
+                
+                $item = $orderData["item"];
+                $res = $this->InstantFans->addOrder($item);
+                
+             
+                $res = json_decode($res->getBody(), true);
+                dump($res);
+                $order = Order::create([
+                    'product_id' => $item["id"],
+                    'order_api_id' => $res->id,
+                    'user_id' => $user_id,
+                    'quantity' => $orderData["qty"],
+                    'link' => $item["link"]
+                ]);
+                
+                return response()->json( [$order, $res],200);
+            }
+            
+        }
+        
+        
+        
+        
+        
             
         return $order;    
     }

@@ -8,6 +8,7 @@ class Cart
     public $items = null;
     public $totalQty;
     public $totalPrice;
+    public $destiny_url;
     
     public function __construct($oldCart)
     {
@@ -20,10 +21,17 @@ class Cart
        
     }
     
-    public function add($item, $id)
+    public function add($item, $id, $order_details)
     {
-        $storedItem = ['qty' => 0, 'price' => $item->our_price, 'item' => $item];
+        $item["order_details"] = $order_details;
         
+        $storedItem = [
+            'qty' => 0, 
+            'price' => $item->our_price, 
+            'item' => $item,
+            
+        ];
+     
         if($this->items)
         {
             if(array_key_exists($id, $this->items))
