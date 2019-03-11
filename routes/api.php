@@ -24,7 +24,6 @@ Route::get('/products/{product}', 'InstantFansController@show');
 // ========= Needs web middleware to set session ============== //
 Route::group(['middleware' => ['web']], function () { 
     Route::resource('/cart', 'CartController');
-    Route::get('/stripe', 'StripeController@index');
 });
 
 
@@ -56,31 +55,20 @@ Route::group(['middleware' => ['auth:api','json.response']], function(){
 
         Route::get('users/{user}/orders','UserController@showOrders');
         
-        Route::post('/stripe', 'StripeController@charge')->middleware("web");
+        Route::post('/stripe', 'StripeController@charge')->middleware("web"); // needs web middleware to use session
         Route::post('/charge-success', 'StripeController@success')->middleware('verified');
 
 
         // Route::patch('orders/{order}/deliver','OrderController@deliverOrder');
         Route::resource('/users', 'UserController')->except('index');
-        Route::resource('/orders', 'OrderController')->except('login, register');
+        Route::resource('/orders', 'OrderController');
         
         /*
-            == GUEST ==
-            login -> Login user and create a token to associate to the user DOCUMENTED
-            register -> Create a new User DOCUMENTED
-            
-            == User ==
-            show -> show this user profile  with their orders DOCUMENTED
-            edit -> User page to edit profile (FRONT END)
-            destroy -> option do delete his account DOCUMENTED
-            update -> Update this profile info for this user DOCUMENTED
-            
-            == ADMIN ==
-            index -> Show all users with their orders
-            create -> An admin page to create a new User
+           
             
             Non-existent
-            store -> ??
+            users -> store -> ??
+            users -> create
         */
         
         

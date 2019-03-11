@@ -100,15 +100,16 @@ class InstantFans
                 break;
         }
         
+   
        
         $res = $client->request('POST', 'https://instant-fans.com/api/v2',
         [
             'query' =>
-            [
+            array_merge([
                 'key' => env('INSTANT_FANS_API_KEY'),
-                'action' => 'add',
-                $query
-            ]
+                'action' => 'add'], 
+                $query)
+                
         ]);
         
         return $res;

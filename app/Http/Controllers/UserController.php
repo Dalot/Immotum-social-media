@@ -111,8 +111,17 @@ class UserController extends Controller
      */
     public function show(User $user)
     {
-        $data = User::where('id', $user->id)->with(['orders'])->get();
-        return response()->json($data, 200);
+        if($user->id === Auth::user()->id)
+        {
+            $data = User::where('id', $user->id)->with(['orders'])->get();
+            return response()->json($data, 200);
+        }
+        else
+        {
+            return abort(403, 'Unauthorized');
+        }
+    
+        
     }
     
     

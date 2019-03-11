@@ -6,6 +6,8 @@ use App\Order;
 
 use Illuminate\Http\Request;
 use GuzzleHttp\Client;
+use App\User;
+use Auth;
 use App\Repositories\InstantFansRepository;
 
 class OrderController extends Controller
@@ -15,11 +17,13 @@ class OrderController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
+        $user = Auth::user();
         
+        $data = Order::where( 'user_id', $user->id )->get();
         
-        return response()->json(Order::with(['product'])->get(),200);
+        return response()->json($data,200);
     }
 
     /**
@@ -38,17 +42,9 @@ class OrderController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request, InstantFansRepository $InstantFansRepository)
+    public function store(Request $request, InstantFansRepository $InstantFansRepository, User $user)
     {
-        
-        
-        $order = $InstantFansRepository->createOrder($request);
-
-        return response()->json([
-            'status' => (bool) $order,
-            'data'   => $order,
-            'Order' => $order ? $order : 'Error Creating Order'
-        ]);
+       
     }
 
     /**
@@ -59,27 +55,21 @@ class OrderController extends Controller
      */
     public function show(Order $order)
     {
-        return response()->json($order,200);
+        $user = Auth::user();
+        $orderOwnerId = $order->user_id;
+  
+        if ( $orderOwnerId === $user->id)
+        {
+            return response()->json($order,200);
+        }
+        else
+        {
+            abort(403, "Unauthorised");
+        }
+        
+        
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Order  $order
-     * @return \Illuminate\Http\Response
-     */
-    public function deliverOrder(Order $order)
-    {
-        // !!!!!!!!!!!!!!!!!!!! STILL NEEDS API REQUEST !!!!!!!!!!!!!!!!!!!!
-        $order->is_delivered = true;
-            $status = $order->save();
-
-            return response()->json([
-                'status'    => $status,
-                'data'      => $order,
-                'message'   => $status ? 'Order Delivered!' : 'Error Delivering Order'
-            ]);
-    }
 
     /**
      * Update the specified resource in storage.
@@ -90,7 +80,12 @@ class OrderController extends Controller
      */
     public function update(Request $request, Order $order)
     {
-        $status = $order->update(
+        $user = Auth::user();
+        $orderOwnerId = $order->user_id;
+  
+        if ( $orderOwnerId === $user->id)
+        {
+            $status = $order->update(
                 $request->only(['quantity'])
             );
 
@@ -98,6 +93,12 @@ class OrderController extends Controller
                 'status' => $status,
                 'message' => $status ? 'Order Updated!' : 'Error Updating Order'
             ]);
+        }
+        else
+        {
+            abort(403, "Unauthorised");
+        }
+        
     }
 
     /**
@@ -108,11 +109,22 @@ class OrderController extends Controller
      */
     public function destroy(Order $order)
     {
-        $status = $order->delete();
+        $user = Auth::user();
+        $orderOwnerId = $order->user_id;
+  
+        if ( $orderOwnerId === $user->id)
+        {
+            $status = $order->delete();
 
             return response()->json([
                 'status' => $status,
                 'message' => $status ? 'Order Deleted!' : 'Error Deleting Order'
             ]);
+        }
+        else
+        {
+            abort(403, "Unauthorised");
+        }
+        
     }
 }

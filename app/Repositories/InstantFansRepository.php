@@ -100,14 +100,21 @@ class InstantFansRepository
                 
              
                 $res = json_decode($res->getBody(), true);
-                dump($res);
-                $order = Order::create([
-                    'product_id' => $item["id"],
-                    'order_api_id' => $res->id,
-                    'user_id' => $user_id,
-                    'quantity' => $orderData["qty"],
-                    'link' => $item["link"]
-                ]);
+               dump($res);
+                try
+                {
+                    $order = Order::create([
+                        'product_id' => $item["id"],
+                        'order_api_id' => $res->id, 
+                        'user_id' => $user_id,
+                        'quantity' => $orderData["qty"],
+                        'link' => $item["link"]
+                    ]);
+                } catch(Exception $e)
+                {
+                    report($e);
+                    return false;
+                }
                 
                 return response()->json( [$order, $res],200);
             }

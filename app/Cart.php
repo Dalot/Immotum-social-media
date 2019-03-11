@@ -8,7 +8,6 @@ class Cart
     public $items = null;
     public $totalQty;
     public $totalPrice;
-    public $destiny_url;
     
     public function __construct($oldCart)
     {
